@@ -15,8 +15,9 @@
 	
 	<cffunction name="testHasError" returntype="void" access="public" output="false">
 		<cfscript>
+			var ex = raiseError();
 			assertFalse( event.hasError() );
-			event = createObject( "component", "logging.LogEvent" ).init( logger, 'debug', 'You screwed up!', structNew() );
+			event = createObject( "component", "logging.LogEvent" ).init( logger, 'debug', 'You screwed up!', ex );
 			assertTrue( event.hasError() );
 		</cfscript>
 	</cffunction>
@@ -42,11 +43,19 @@
 	
 	<cffunction name="testGetError" returntype="void" access="public" output="false">
 		<cfscript>
-			event = createObject( "component", "logging.LogEvent" ).init( logger, 'debug', 'You screwed up!', structNew() );
-			assertEquals( structNew(), event.getError() );
+			var ex = raiseError();
+			event = createObject( "component", "logging.LogEvent" ).init( logger, 'debug', 'You screwed up!', ex );
+			assertEquals( ex, event.getError() );
 		</cfscript>
 	</cffunction>
 	
 <!------------------------------------------- PRIVATE ------------------------------------------->
 
+	<cffunction name="raiseError" access="private" output="false">
+		<cfscript>
+			var err = 0;
+			try { sdfgsdfgsdfg();	} catch ( Any ex ) { 	err = ex;	}
+			return err;
+		</cfscript>
+	</cffunction>
 </cfcomponent>
