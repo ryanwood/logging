@@ -6,7 +6,7 @@
 			logfile = GetTempDirectory() & "test.log";
 			clearFile( logfile );			
 			layout = mf.createMock( 'logging.Layout' );
-			appender = createObject( "component", "logging.appenders.FileAppender" ).init( logfile, layout );
+			appender = createObject( "component", "logging.appenders.FileAppender" ).init( 'file', logfile, layout );
 		</cfscript>
 	</cffunction>
 
@@ -20,7 +20,6 @@
 		<cfscript>
 			var event = mf.createMock( 'logging.LogEvent' );
 			var formattedMessage = "DEBUG 12:30PM You had an error";
-			debug( logfile );
 			mf.expect( layout.format( event ) ).andReturn( formattedMessage );
 			
 			mf.replay( layout, event );
@@ -30,6 +29,8 @@
 			assertEquals( formattedMessage, chomp( readFile( logfile ) ) );			
 		</cfscript>
 	</cffunction>
+	
+	<!------------------------------------------- PRIVATE ------------------------------------------->
 	
 	<cffunction name="readFile" returntype="string" access="private" output="false">
 		<cfargument name="filename" required="true" />

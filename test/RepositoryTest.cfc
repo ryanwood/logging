@@ -3,7 +3,7 @@
 	<cffunction name="setup" returntype="void" access="public">
 		<cfscript>
 			repo = createObject( "component", "logging.Repository" ).init();
-			logger = createObject("component", "logging.Logger").init();
+			logger = createObject("component", "logging.Logger").init( 'base' );
 			repo.addLogger( 'base', logger );
 		</cfscript>
 	</cffunction>

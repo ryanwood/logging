@@ -14,13 +14,13 @@
 
 	<!------------------------------------------- PUBLIC ------------------------------------------->		
 	
-	<cffunction name="getLogger" output="false" access="public">
+	<cffunction name="getLogger" returntype="logging.Logger" access="public" output="false">
 		<cfargument name="name" type="string" required="true"/>
 		<cfset var logger = 0 />
 		<cfif getRepository().hasLogger( arguments.name )>
 			<cfset logger = getRepository().getLogger( arguments.name ) />
 		<cfelse>		
-			<cfset logger = createObject("component", "logging.Logger").init() />
+			<cfset logger = createObject("component", "logging.Logger").init( arguments.name ) />
 			<cfset logger.configure( getLevels() ) />
 			<cfset getRepository().addLogger( arguments.name, logger ) />
 		</cfif>		
