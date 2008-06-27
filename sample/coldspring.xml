@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+  <bean id="LoggerFactory" class="logging.LoggerFactory" />
+  <bean id="Logger" factory-bean="LoggerFactory" factory-method="getLogger">
+    <constructor-arg name="name"><value>base</value></constructor-arg>
+  </bean>
+</beans>
