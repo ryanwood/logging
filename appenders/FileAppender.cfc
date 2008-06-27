@@ -15,7 +15,9 @@
 		
 	<cffunction name="write" returntype="string" access="public" output="false">
 		<cfargument name="event" type="logging.LogEvent" required="true" />
-		<cffile action="append" file="#instance.file#" output="#getLayout().format( arguments.event )#" addnewline="true" />	
+		<cflock name="file_appender_lock_for_#getName()#" timeout="30">
+			<cffile action="append" file="#instance.file#" output="#getLayout().format( arguments.event )#" addnewline="true" />
+		</cflock>	
 	</cffunction>
 	
 	<!------------------------------------------- PACKAGE ------------------------------------------->

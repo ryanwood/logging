@@ -2,7 +2,7 @@
 
 	<cffunction name="setup" returntype="void" access="public">
 		<cfscript>
-			logger = createObject( "component", "logging.Logger" ).init();
+			logger = createObject( "component", "logging.Logger" ).init( 'base' );
 			event = createObject( "component", "logging.LogEvent" ).init( logger, 'debug', 'You screwed up!' );
 		</cfscript>
 	</cffunction>

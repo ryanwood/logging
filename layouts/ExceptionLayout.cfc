@@ -27,7 +27,7 @@
 	
 	<!------------------------------------------- PRIVATE ------------------------------------------->
 	
-	<cffunction name="parseException" returntype="string" output="false" access="public">
+	<cffunction name="parseException" returntype="string" access="private" output="false">
 		<cfargument name="exception" required="true" hint="a CFCATCH object" />
 			<cfscript>
 				var s = '';
@@ -48,7 +48,7 @@
 
 				writeLine( "CONTEXT: " );
    			for( i = 1; i le arrayLen(context); i = i + 1 ) {
-   				write( ' #i#:' );
+   				write( indent( 2 ) & 'i:' );
    				if( structKeyExists( context[i], "id" ) ) {
    					write( ' #context[i]["id"]#' );
    				} else {
@@ -81,7 +81,7 @@
 		</cfscript>
 	</cffunction>
 
-	<cffunction name="parseStruct" returnType="string" output="false" access="public">
+	<cffunction name="parseStruct" returnType="string" access="private" output="false">
 		<cfargument name="structToParse" type="struct" required="true" />
 		<cfargument name="structName" type="string" default="" />
 		<cfscript>
@@ -99,18 +99,23 @@
 		</cfscript>
 	</cffunction>
 	
-	<cffunction name="writeLine" returnType="string" output="false" access="public">
+	<cffunction name="writeLine" returnType="string" access="private" output="false">
 		<cfargument name="line" type="string" required="true" />
-		<cfset instance.buffer = instance.buffer & "  " & arguments.line & newLine() />
+		<cfset instance.buffer = instance.buffer & indent() & arguments.line & newLine() />
 	</cffunction>
 	
-	<cffunction name="write" returnType="string" output="false" access="public">
+	<cffunction name="write" returnType="string" access="private" output="false">
 		<cfargument name="text" type="string" required="true" />
 		<cfset instance.buffer = instance.buffer & arguments.text />
 	</cffunction>
 	
-	<cffunction name="writeBlankLine" returnType="string" output="false" access="public">
+	<cffunction name="writeBlankLine" returnType="string" access="private" output="false">
 		<cfset writeLine( '' ) />
+	</cffunction>
+	
+	<cffunction name="indent" returnType="string" access="private" output="false">
+		<cfargument name="count" type="numeric" default="1" />
+		<cfreturn repeatString( '  ', arguments.count ) />
 	</cffunction>	
 	
 	<cffunction name="clearBuffer" access="private" returntype="void" output="false">

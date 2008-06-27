@@ -4,7 +4,9 @@
 	</cfscript>
 	
 	<cffunction name="init" access="public" output="false">
+		<cfargument name="name" type="string" required="true" />
 		<cfscript>
+			setName( arguments.name );
 			setAppenders( arrayNew(1) );		
 			return this;
 		</cfscript>
@@ -48,6 +50,10 @@
 	--->
 
 	<!--- Accessors --->
+
+	<cffunction name="getName" access="public" returntype="string" output="false">
+		<cfreturn instance.name />
+	</cffunction>
 
 	<cffunction name="getAppenders" returntype="Array" output="false" hint="I get the appender collection" access="public">
 		<cfreturn instance.appenders />
@@ -140,7 +146,11 @@
 	</cffunction>
 	
 	<!------------------------------------------- PRIVATE ------------------------------------------->
-
+	
+	<cffunction name="setName" access="private" returntype="void" output="false">
+		<cfargument name="name" type="string" required="true" />
+		<cfset instance.name = arguments.name />
+	</cffunction>
 
 	<cffunction name="setLevels" output="false" access="private">
 		<cfargument name="levels" type="string" required="true"/>
