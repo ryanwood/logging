@@ -7,12 +7,13 @@
 		<cfargument name="name" type="string" required="true" />
 		<cfscript>
 			setName( arguments.name );
-			setAppenders( arrayNew(1) );		
+			setAppenders( arrayNew(1) );
+			setLevel( 'all' );
 			return this;
 		</cfscript>
 	</cffunction>
 
-	<!------------------------------------------- PUBLIC ------------------------------------------->	
+	<!------------------------------------------- PUBLIC ------------------------------------------->
 	
 	<cffunction name="onMissingMethod" output="false" access="public">
     <cfargument name="missingMethodName" type="string" />
@@ -112,18 +113,41 @@
 	</cffunction>
 
 	<cffunction name="setLevel" returntype="void" output="false" hint="I set the amount of information to be logged" access="public">
-		<cfargument name="level" type="string" required="true"/>
-		<cfif structKeyExists( instance.levelMap, arguments.level )>
-			<cfset instance.level = instance.levelMap[arguments.level]/>
+		<cfargument name="level" type="any" required="true"/>
+		<cfif isNumeric( arguments.level ) and arguments.level gt 0 and arguments.level lte ( listLen( getLevels() ) + 1 )>
+			<cfset instance.level = arguments.level />
+		<cfelseif isSimpleValue( arguments.level )>
+			<cfif arguments.level is 'all'>
+				<cfset instance.level = 1 />
+			<cfelseif arguments.level is 'off'>
+				<cfset instance.level = listLen( getLevels() ) + 1 />
+			<cfelseif structKeyExists( instance.levelMap, arguments.level )>
+				<cfset instance.level = instance.levelMap[arguments.level]/>
+			<cfelse>
+				<cfthrow type="logging.InvalidLogLevel" message="Unable to set invalid log level: #arguments.level#. #getValidLogLevelMessage()#" />
+			</cfif>
 		<cfelse>
-			<cfthrow type="logging.InvalidLogLevel" message="Unable to set invalid log level: #arguments.level#. #getValidLogLevelMessage()#" />
+			<cfthrow type="logging.InvalidLogLevel" message="Unable to set invalid log level. #getValidLogLevelMessage()#" />
 		</cfif>
 	</cffunction>	
 		
 	<cffunction name="getMaxLevelLength" output="false" access="public">
 		<cfreturn instance.maxLevelLength />
 	</cffunction>
+	<!---
+	<cffunction name="hasParent" returntype="boolean" output="false" access="public">
+		<cfreturn structKeyExists( instance, 'parent' ) />
+	</cffunction>
 	
+	<cffunction name="getParent" returntype="logging.Logger" output="false" access="public">
+		<cfreturn instance.parent />
+	</cffunction>
+
+	<cffunction name="setParent" returntype="logging.Logger" output="false" access="public">
+		<cfargument name="value" type="logging.Logger" required="true"/>
+		<cfset instance.parent = arguments.value />
+	</cffunction>
+	--->
 	<!--- 
 	<cffunction name="getStartTick" returntype="numeric" output="false" access="public">
 		<cfif isDefined("instance.startTick")>

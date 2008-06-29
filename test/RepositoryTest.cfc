@@ -26,5 +26,13 @@
 			assertTrue( repo.hasLogger( 'base' ) );
 		</cfscript>
 	</cffunction>
+	
+	<cffunction name="testParent" returntype="void" access="public" output="false">
+		<cfscript>
+			var factory = createObject( "component", "logging.LoggerFactory" ).init();
+			var l = factory.getLogger( 'new' );
+			debug( l.getLevelMap() );
+		</cfscript>
+	</cffunction>
 
 </cfcomponent>

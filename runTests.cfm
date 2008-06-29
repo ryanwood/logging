@@ -5,7 +5,7 @@
 
 
 <cfset dir = expandPath(".")>
-<cfoutput><h1>#dir#</h1></cfoutput>
+<cfoutput><h1>Logging Test Suite</h1></cfoutput>
 
 <cfset DTS = createObject("component","mxunit.runner.DirectoryTestSuite")>
 <cfset excludes = "">

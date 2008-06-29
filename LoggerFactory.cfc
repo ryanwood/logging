@@ -19,13 +19,13 @@
 		<cfset var logger = 0 />
 		<cfif getRepository().hasLogger( arguments.name )>
 			<cfset logger = getRepository().getLogger( arguments.name ) />
-		<cfelse>		
+		<cfelse>
 			<cfset logger = createObject("component", "logging.Logger").init( arguments.name ) />
 			<cfset logger.configure( getLevels() ) />
 			<cfset getRepository().addLogger( arguments.name, logger ) />
-		</cfif>		
-		<cfreturn logger />		
-	</cffunction>	
+		</cfif>
+		<cfreturn logger />
+	</cffunction>
 	
 	<cffunction name="getLevels" output="false" access="public">
 		<cfreturn instance.levels />

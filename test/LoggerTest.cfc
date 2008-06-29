@@ -47,19 +47,7 @@
 		</cfscript>
 	</cffunction>
 	
-	<cffunction name="testSettingBogusLevelShouldFail" returntype="void" access="public" output="false">
-		<cfscript>
-			try {
-				logger.setLevel( 'foo' );
-				fail( "Allowed invalid level to be set." );
-			} catch( logging ex ) {
-				assertEquals( "logging.InvalidLogLevel", ex.type );
-				assertEquals( "Unable to set invalid log level: foo. Valid values for this logger are #logger.getFormattedLevelList()#.", ex.message );
-			} 
-		</cfscript>
-	</cffunction>
-	
-	<cffunction name="testIsBogusLevelShouldFail" returntype="void" access="public" output="false">
+	<cffunction name="testIsInvalidLevelShouldFail" returntype="void" access="public" output="false">
 		<cfscript>
 			logger.setLevel( 'debug' );
 			try {
@@ -71,14 +59,10 @@
 		</cfscript>
 	</cffunction>
 	
-	<cffunction name="testShouldSetLogLevelFirst" returntype="void" access="public" output="false">
+	<cffunction name="testLevelShouldDefaultToAll" returntype="void" access="public" output="false">
 		<cfscript>
- 			try {
-				logger.isDebug();
-				fail( "Allowed invalid level to be tested before level was set." );
-			} catch( logging ex ) {
-				assertEquals( "logging.LevelNotDefined", ex.type );
-			} 
+			assertTrue( logger.isDebug() );
+			assertEquals( 1, logger.getLevel() );
 		</cfscript>
 	</cffunction>
 	
@@ -87,7 +71,75 @@
  			assertEquals( 5, logger.getMaxLevelLength() );
 		</cfscript>
 	</cffunction>
+	
+	<cffunction name="testSetLevelAsString" returntype="void" access="public" output="false">
+		<cfscript>
+			logger.setLevel( 'debug' );
+			assertEquals( 1, logger.getLevel() );
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="testSetLevelAsInteger" returntype="void" access="public" output="false">
+		<cfscript>
+			logger.setLevel( 2 );
+			assertEquals( 2, logger.getLevel() );
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="testSetLevelAsKeyword" returntype="void" access="public" output="false">
+		<cfscript>
+			logger.setLevel( 'off' );
+			assertEquals( 6, logger.getLevel() );
 
+			logger.setLevel( 'all' );
+			assertEquals( 1, logger.getLevel() );
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="testSetInvalidLevelShouldFail" returntype="void" access="public" output="false">
+		<cfscript>
+			// set as level string
+			logger.setLevel( 'debug' );
+			assertEquals( 1, logger.getLevel() );
+			// set as integer
+			logger.setLevel( 2 );
+			assertEquals( 2, logger.getLevel() );
+			// set as keyword 'off'
+			logger.setLevel( 'off' );
+			assertEquals( 6, logger.getLevel() );
+			// set as keyword 'all'
+			logger.setLevel( 'all' );
+			assertEquals( 1, logger.getLevel() );
+			
+			try { logger.setLevel( -1 ); fail( "Invalid log level allowed." ); } 
+			catch( logging ex ) { assertEquals( "logging.InvalidLogLevel", ex.type ); }
+			
+			try { logger.setLevel( 32 ); fail( "Invalid log level allowed." ); } 
+			catch( logging ex ) { assertEquals( "logging.InvalidLogLevel", ex.type ); }
+			
+			try { logger.setLevel( 'foobar' ); fail( "Invalid log level allowed." ); } 
+			catch( logging ex ) { assertEquals( "logging.InvalidLogLevel", ex.type ); }
+			
+			try { logger.setLevel( structNew() ); fail( "Invalid log level allowed." ); } 
+			catch( logging ex ) { assertEquals( "logging.InvalidLogLevel", ex.type ); }			
+		</cfscript>
+	</cffunction>
+	<!---
+	<cffunction name="testHasNoParent" returntype="void" access="public" output="false">
+		<cfscript>
+ 			assertFalse( logger.hasParent() );
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="testHasParent" returntype="void" access="public" output="false">
+		<cfscript>
+			var child = factory.getLogger( 'base::child' );
+			assertFalse( logger.hasParent() );
+			assertTrue( child.hasParent() );
+			assertEquals( logger, child.getParent() );
+		</cfscript>
+	</cffunction>
+	--->
 	
 <!------------------------------------------- PRIVATE ------------------------------------------->
 	
