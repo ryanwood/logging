@@ -64,33 +64,63 @@
 			assertSame( repo.getLogger( 'A::B' ), repo.parent( 'A::B::C::E' ) );
 			assertSame( repo.getLogger( 'A::B' ), repo.parent( 'A::B::C::F' ) );
 			
+			repo.addLogger( 'A::B::C' );
+			assertSame( repo.getLogger( 'A::B' ), repo.parent( 'A::B::C' ) );
+			assertSame( repo.getLogger( 'A::B::C' ), repo.parent( 'A::B::C::D' ) );
+			assertSame( repo.getLogger( 'A::B::C' ), repo.parent( 'A::B::C::E' ) );
+			assertSame( repo.getLogger( 'A::B::C' ), repo.parent( 'A::B::C::F' ) );
 			
-			/*
-	    def test_parent
-	      %w(A A::B A::B::C::D A::B::C::E A::B::C::F).each do |name|
-				
-	        ::Logging::Logger.new(name)
-	      end
+			repo.addLogger( 'A::B::C::E::G' );
+			assertSame( repo.getLogger( 'A::B::C::E' ), repo.parent( 'A::B::C::E::G' ) );
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="testChildren" returntype="void" access="public" output="false">
+		<cfscript>
+			var loggers = arrayNew(1);
+			var keys = "D E F";
+			var key = '';
+			var logger = '';
+			var a = '';
+			
+			repo.addLogger( 'A' );
+			assertEquals( arrayNew(1), repo.children( 'A' ) );
+			
+			repo.addLogger( 'A::B' );
+						
+			for( i = 1; i lte listLen( keys, " " ); i = i + 1 ) {
+				arrayAppend( loggers, repo.addLogger( "A::B::C::#listGetAt( keys, i, " " )#" ) );
+			}
+			a = [ repo.getLogger( 'A::B' ) ];
+			assertEquals( a, repo.children( 'A' ) );
 
-	      assert_same @repo[:root], @repo.parent('A')
-	      assert_same @repo['A'], @repo.parent('A::B')
-	      assert_same @repo['A::B'], @repo.parent('A::B::C')
-	      assert_same @repo['A::B'], @repo.parent('A::B::C::D')
-	      assert_same @repo['A::B'], @repo.parent('A::B::C::E')
-	      assert_same @repo['A::B'], @repo.parent('A::B::C::F')
+			/*
+			
+			def test_children
+	      ::Logging::Logger.new('A')
+
+	      assert_equal [], @repo.children('A')
+
+	      ::Logging::Logger.new('A::B')
+	      a = %w(D E F).map {|name| ::Logging::Logger.new('A::B::C::'+name)}.sort
+
+	      assert_equal [@repo['A::B']], @repo.children('A')
+	      assert_equal a, @repo.children('A::B')
+	      assert_equal a, @repo.children('A::B::C')
 
 	      ::Logging::Logger.new('A::B::C')
 
-	      assert_same @repo['A::B'], @repo.parent('A::B::C')
-	      assert_same @repo['A::B::C'], @repo.parent('A::B::C::D')
-	      assert_same @repo['A::B::C'], @repo.parent('A::B::C::E')
-	      assert_same @repo['A::B::C'], @repo.parent('A::B::C::F')
+	      assert_equal [@repo['A::B::C']], @repo.children('A::B')
+	      assert_equal a, @repo.children('A::B::C')
 
 	      ::Logging::Logger.new('A::B::C::E::G')
 
-	      assert_same @repo['A::B::C::E'], @repo.parent('A::B::C::E::G')
+	      assert_equal a, @repo.children('A::B::C')
+	      assert_equal [@repo['A::B::C::E::G']], @repo.children('A::B::C::E')
 	    end
-	*/
+			
+			*/
+			
 		</cfscript>
 	</cffunction>
 
