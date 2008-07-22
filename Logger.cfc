@@ -189,7 +189,7 @@
 		</cfloop>
 	</cffunction>
 	
-	<cffunction name="logEvent" returntype="void"  access="protected" output="false">
+	<cffunction name="logEvent" returntype="void"  access="package" output="false">
 		<cfargument name="event" type="logging.LogEvent" required="true" />
 	
 		<cfif shouldLog( arguments.event.getLevel() )>
