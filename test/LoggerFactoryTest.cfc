@@ -2,7 +2,6 @@
 
 	<cffunction name="setup" returntype="void" access="public">
 		<cfscript>
-			levels = 'debug,info,warn,error,fatal';
 			factory = createObject( "component", "logging.LoggerFactory" ).init();
 		</cfscript>
 	</cffunction>
@@ -27,21 +26,10 @@
 			assertSame( logger, logger2 );
 		</cfscript>
 	</cffunction>
-	
-	<cffunction name="testDefaultLogLevels" returntype="void" access="public" output="false">
+		
+	<cffunction name="testRootLoggerShouldBeCreatedAtInit" returntype="void" access="public" output="false">
 		<cfscript>
-			assertEquals( levels, factory.getLevels() );
-		</cfscript>
-	</cffunction>
-	
-	<cffunction name="testCustomLogLevels" returntype="void" access="public" output="false">
-		<cfscript>
-			var levels = 'good,bad,ugly';
-			var level = '';
-			var i = 1;
-			
-			factory.setLevels( levels );
-			assertEquals( levels, factory.getLevels() );
+			assertTrue( isInstanceOf( factory.getLogger( 'root' ), 'logging.RootLogger' ) );
 		</cfscript>
 	</cffunction>
 	

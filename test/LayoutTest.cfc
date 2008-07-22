@@ -23,7 +23,7 @@
 		<cfscript>
 			var t = now();
 			makePublic( layout, "formatNow" );  
-			assertEquals( "#dateFormat( t, 'yyyy-mm-dd' )# #timeFormat( t, 'HH:mm:ss.l' )#", layout._formatNow( t ) );
+			assertEquals( "#dateFormat( t, 'yyyy-mm-dd' )# #timeFormat( t, 'HH:mm:ss.l' )#", layout.formatNow( t ) );
 		</cfscript>
 	</cffunction>
 

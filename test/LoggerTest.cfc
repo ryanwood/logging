@@ -124,13 +124,13 @@
 			catch( logging ex ) { assertEquals( "logging.InvalidLogLevel", ex.type ); }			
 		</cfscript>
 	</cffunction>
-	<!---
-	<cffunction name="testHasNoParent" returntype="void" access="public" output="false">
+
+	<cffunction name="testEveryLoggerShouldHaveParent" returntype="void" access="public" output="false">
 		<cfscript>
- 			assertFalse( logger.hasParent() );
+			assertTrue( isObject( logger.getParent() ) );
 		</cfscript>
 	</cffunction>
-	
+	<!---
 	<cffunction name="testHasParent" returntype="void" access="public" output="false">
 		<cfscript>
 			var child = factory.getLogger( 'base::child' );

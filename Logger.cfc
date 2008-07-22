@@ -8,6 +8,7 @@
 		<cfscript>
 			setName( arguments.name );
 			setAppenders( arrayNew(1) );
+			// This should be inherited from the parent logger
 			setLevel( 'all' );
 			return this;
 		</cfscript>
@@ -134,20 +135,19 @@
 	<cffunction name="getMaxLevelLength" output="false" access="public">
 		<cfreturn instance.maxLevelLength />
 	</cffunction>
-	<!---
-	<cffunction name="hasParent" returntype="boolean" output="false" access="public">
-		<cfreturn structKeyExists( instance, 'parent' ) />
+	
+	<cffunction name="getAddtive" returntype="boolean" output="false" access="public">
+		<cfreturn instance.additive />
+	</cffunction>
+
+	<cffunction name="setAdditive" returntype="void" output="false" access="public">
+		<cfargument name="value" type="boolean" required="true"/>
+		<cfset instance.additive = arguments.value />
 	</cffunction>
 	
 	<cffunction name="getParent" returntype="logging.Logger" output="false" access="public">
 		<cfreturn instance.parent />
 	</cffunction>
-
-	<cffunction name="setParent" returntype="logging.Logger" output="false" access="public">
-		<cfargument name="value" type="logging.Logger" required="true"/>
-		<cfset instance.parent = arguments.value />
-	</cffunction>
-	--->
 	<!--- 
 	<cffunction name="getStartTick" returntype="numeric" output="false" access="public">
 		<cfif isDefined("instance.startTick")>
@@ -168,16 +168,14 @@
 		<cfargument name="levels" required="true" />
 		<cfset setLevels( arguments.levels ) />
 	</cffunction>
-	
-	<!------------------------------------------- PRIVATE ------------------------------------------->
-	
-	<cffunction name="setName" access="private" returntype="void" output="false">
-		<cfargument name="name" type="string" required="true" />
-		<cfset instance.name = arguments.name />
-	</cffunction>
 
-	<cffunction name="setLevels" output="false" access="private">
-		<cfargument name="levels" type="string" required="true"/>
+	<cffunction name="setParent" returntype="void" output="false" access="package">
+		<cfargument name="value" type="logging.Logger" required="true"/>
+		<cfset instance.parent = arguments.value />
+	</cffunction>
+	
+	<cffunction name="setLevels" output="false" access="package">
+		<cfargument name="levels" type="string" required="true" hint="A string such as 'debug,info,warn'"/>
 		<cfset var level = 0 />
 		<cfset instance.levels = arguments.levels />
 		<cfset instance.levelMap = structNew() />
@@ -190,6 +188,27 @@
 			</cfif>
 		</cfloop>
 	</cffunction>
+	
+	<cffunction name="logEvent" returntype="void"  access="protected" output="false">
+		<cfargument name="event" type="logging.LogEvent" required="true" />
+	
+		<cfif shouldLog( arguments.event.getLevel() )>
+			<cfloop index="i" from="1" to="#arrayLen( instance.appenders )#">
+				<cfset instance.appenders[i].write( arguments.event ) />
+			</cfloop>
+		</cfif>
+		
+		<!--- <cfif getAdditive()>
+					<cfset getParent().logEvent( arguments.event ) />			
+				</cfif> --->
+	</cffunction>
+
+	<!------------------------------------------- PRIVATE ------------------------------------------->
+	
+	<cffunction name="setName" access="private" returntype="void" output="false">
+		<cfargument name="name" type="string" required="true" />
+		<cfset instance.name = arguments.name />
+	</cffunction>
 
 	<cffunction name="getPipedLevels" output="false" access="private">
 		<cfif not structKeyExists( instance, 'pipedLevels' )>
@@ -201,16 +220,6 @@
 	<cffunction name="getValidLogLevelMessage" output="false" access="private">
 		<cfreturn "Valid values for this logger are #getFormattedLevelList()#." />
 	</cffunction>	
-	
-	<cffunction name="logEvent"  access="private" output="false">
-		<cfargument name="event" type="logging.LogEvent" required="true" />
-	
-		<cfif shouldLog( arguments.event.getLevel() )>
-			<cfloop index="i" from="1" to="#arrayLen( instance.appenders )#">
-				<cfset instance.appenders[i].write( arguments.event ) />
-			</cfloop>
-		</cfif>
-	</cffunction>
 
 	<cffunction name="createLogEvent"  access="private" output="false">
 		<cfargument name="level" type="string" required="true" />
