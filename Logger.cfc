@@ -136,7 +136,7 @@
 		<cfreturn instance.maxLevelLength />
 	</cffunction>
 	
-	<cffunction name="getAddtive" returntype="boolean" output="false" access="public">
+	<cffunction name="getAdditive" returntype="boolean" output="false" access="public">
 		<cfreturn instance.additive />
 	</cffunction>
 
@@ -198,9 +198,9 @@
 			</cfloop>
 		</cfif>
 		
-		<!--- <cfif getAdditive()>
-					<cfset getParent().logEvent( arguments.event ) />			
-				</cfif> --->
+		<cfif getAdditive()>
+			<cfset getParent().logEvent( arguments.event ) />			
+		</cfif>
 	</cffunction>
 
 	<!------------------------------------------- PRIVATE ------------------------------------------->

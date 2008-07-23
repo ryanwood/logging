@@ -15,10 +15,18 @@
 		<cfargument name="event" type="logging.LogEvent" required="true" />
 		<cfscript>
 			var s = instance.pattern;
+			var found = refind( '%c([0-9]+)', s, 1, true );
+			var pad = len( arguments.event.getLogger().getName() ) + 1;
+			
+			if( arrayLen(found.pos) gt 1 ) {
+				pad = mid( s, found.pos[2], found.len[2] );
+				s = rereplace( s, '%c[0-9]+', '%c' );
+			}
+						
 			s = replacenocase( s, '%l', ucase( ljustify( arguments.event.getLevel(), arguments.event.getLogger().getMaxLevelLength() ) ) );
-			s = replacenocase( s, '%d', formatNow() );
+			s = replacenocase( s, '%d', formatNow( arguments.event.getTimestamp() ) );
 			s = replacenocase( s, '%m', arguments.event.getMessage() );
-			s = replacenocase( s, '%c', arguments.event.getLogger().getName() );
+			s = replacenocase( s, '%c', lJustify( arguments.event.getLogger().getName(), pad ) );
 			return s;
 		</cfscript>		
 	</cffunction>

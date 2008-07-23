@@ -7,6 +7,7 @@
 		<cfscript>
 			super.init( argumentCollection = arguments );
 			instance.file = arguments.file;
+			ensureFileExists();
 			return this;
 		</cfscript>
 	</cffunction>
@@ -23,5 +24,12 @@
 	<!------------------------------------------- PACKAGE ------------------------------------------->
 	
 	<!------------------------------------------- PRIVATE ------------------------------------------->
+
+	<cffunction name="ensureFileExists" returntype="string" access="public" output="false">
+		<cfif not fileExists( instance.file )>
+			<cffile action="write" file="#instance.file#" 
+				output="Created Log File #dateFormat( now() )# #timeFormat( now() )#" mode="644" addNewLine="true"  />
+		</cfif>
+	</cffunction>
 
 </cfcomponent>

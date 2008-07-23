@@ -26,7 +26,7 @@
 			appender.write( event );			
 			mf.verify( layout, event );
 			
-			assertEquals( formattedMessage, chomp( readFile( logfile ) ) );			
+			assertEquals( formattedMessage, clean( readFile( logfile ) ) );			
 		</cfscript>
 	</cffunction>
 	
@@ -36,6 +36,8 @@
 		<cfargument name="filename" required="true" />
 		<cfset var out = '' />
 		<cffile action="read" file="#arguments.filename#" variable="out" />
+		<!--- Kill first line --->
+		<cfset out = rereplacenocase( out, "^Created Log File[a-z0-9 :\-]*", "", "one" ) />
 		<cfreturn out />
 	</cffunction>
 
@@ -46,7 +48,7 @@
 		</cfif>
 	</cffunction>
 	
-	<cffunction name="chomp" returntype="string" access="private" output="false">
+	<cffunction name="clean" returntype="string" access="private" output="false">
 		<cfargument name="string" required="true" />
 		<cfreturn rereplace( arguments.string, "[\n\r]", "", "all" ) />
 	</cffunction>

@@ -15,6 +15,7 @@
 			if( structKeyExists( arguments, 'error' ) and isObject( arguments.error ) ) {
 				instance.error = arguments.error;
 			}
+			instance.timestamp = now();
 			return this;
 		</cfscript>
 	</cffunction>
@@ -31,6 +32,10 @@
 		
 	<cffunction name="getMessage" output="false" access="public">
 		<cfreturn instance.message />
+	</cffunction>
+	
+	<cffunction name="getTimestamp" output="false" access="public">
+		<cfreturn instance.timestamp />
 	</cffunction>
 		
 	<cffunction name="getError" output="false" access="public">
